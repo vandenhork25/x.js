@@ -137,7 +137,6 @@
 		
 		if (xJS.empty(func)) {
 			func = undefined;
-			args = undefined;
 			return false;
 		}
 		
