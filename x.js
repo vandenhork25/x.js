@@ -45,9 +45,15 @@
 	 * Core functions
 	 */
 	
-	xJS.defined = (function(subject, returnObj) {
-		if (typeof subject === "string" && subject.length > 0) {
+	xJS.defined = (function(subject, asObject, returnObj) {
+		
+		if (asObject !== false) {
+			asObject = true;
+		}
+		
+		if (asObject && typeof subject === "string" && subject.length > 0) {
 			var subjectArr = subject.split(".");
+						
 			if (subjectArr[0] === "window") {
 				subjectArr.shift();
 			}
@@ -84,8 +90,8 @@
 		}
 	});
 	
-	xJS.empty = (function(subject) {
-		if (xJS.defined(subject)) {
+	xJS.empty = (function(subject, asObject) {
+		if (xJS.defined(subject, asObject)) {
 			switch (typeof subject) {
 				case "string" :
 				case "array" :
@@ -203,12 +209,12 @@
 	
 	/**
 	 * Events
+	 * 
 	 */
 	
 	var fireAlwaysEvents = {},
 		fireOnceEvents = {};
 	
-	// Object functions
 	xJS.fn.on = (function(event, func) {
 		
 		if (_debug) {
@@ -286,8 +292,6 @@
 		return this;
 	});
 	
-	
-	// Class functions
 	xJS.on = (function(event, func) {
 		
 		if (_debug) {
@@ -361,8 +365,48 @@
 	});
 	
 	/**
-	 * Debugging functions
+	 * jQuery integration
+	 * 
 	 */
+	
+	if (xJS.defined(jQuery)) {
+		
+		jQuery(document).on("ready", (function() {
+			xJS.trigger("document.ready");
+		}));
+		
+		jQuery(window).on("load", (function() {
+			xJS.trigger("window.load");
+		}));
+		
+		jQuery(window).on("unload", (function() {
+			xJS.trigger("window.unload");
+		}));
+		
+		jQuery(window).on("resize", (function() {
+			xJS.trigger("window.resize");
+		}));
+		
+		jQuery(window).on("scroll", (function() {
+			xJS.trigger("window.scroll");
+		}));
+		
+		jQuery(document).on("submit", "form", (function(event) {
+			if (!xJS.empty(this.id)) {
+				xJS("#" + this.id).trigger("form.submit", [event, this]);
+			} else {
+				xJS.trigger("form.submit", [event, this]);
+			}
+			
+			
+		}));
+	}
+	
+	/**
+	 * Console functions
+	 * 
+	 */
+	
 	xJS.log = (function() {
 		if (xJS.defined("console.log.apply")) {
 			console.log.apply(console, arguments);
@@ -400,43 +444,76 @@
 	});
 	
 	/**
-	 * jQuery integration
+	 * i18n
+	 * 
 	 */
-	if (xJS.defined(jQuery)) {
 		
-		jQuery(document).on("ready", (function() {
-			xJS.trigger("document.ready");
-		}));
+	xJS.i18n = {
+		_current : (xJS.defined("navigator.language")) ? navigator.language : "en-US",
+		_translations : {},
 		
-		jQuery(window).on("load", (function() {
-			xJS.trigger("window.load");
-		}));
-		
-		jQuery(window).on("unload", (function() {
-			xJS.trigger("window.unload");
-		}));
-		
-		jQuery(window).on("resize", (function() {
-			xJS.trigger("window.resize");
-		}));
-		
-		jQuery(window).on("scroll", (function() {
-			xJS.trigger("window.scroll");
-		}));
-		
-		jQuery(document).on("submit", "form", (function(event) {
-			if (!xJS.empty(this.id)) {
-				xJS("#" + this.id).trigger("form.submit", [event, this]);
-			} else {
-				xJS.trigger("form.submit", [event, this]);
+		get : (function(string, language) {
+			
+			if (_debug) {
+				x.info("xJS.i18n.get", {"string":string,"language":language});
 			}
 			
-			
-		}));
-	}
-	
-	
+			language = xJS.i18n.check(language);
+			return xJS.i18n._translations[language][string];
+		}),
 		
+		set : (function(string, translation, language) {
+			
+			if (_debug) {
+				x.info("xJS.i18n.set", {"string":string,"translation":translation,"language":language});
+			}
+			
+			language = xJS.i18n.check(language);
+			xJS.i18n._translations[language][string] = translation;
+		}),
+		
+		check : (function(language) {
+			
+			if (_debug) {
+				x.info("xJS.i18n.check", {"language":language});
+			}
+			
+			if (xJS.empty(language, false)) {
+				language = xJS.i18n._current;
+			}
+			
+			if (xJS.empty(xJS.i18n._translations[language])) {
+				xJS.i18n._translations[language] = {};
+			}
+			
+			return language;
+		}),
+		
+		lang : (function(language) {
+
+			if (_debug) {
+				x.info("xJS.i18n.lang", {"language":language});
+			}
+			
+			if (xJS.empty(language, false)) {
+				return xJS.i18n._current;
+			}
+			
+			language = xJS.i18n.check(language);
+			xJS.i18n._current = language;
+		})
+		
+	};
+
+	xJS.__ = (function(string, language) {
+		
+		if (_debug) {
+			x.info("xJS.__", {"string":string,"language":language});
+		}
+		
+		return xJS.i18n.get(string, language);
+	});
+	
 	window.xJS = window.x = xJS;
 
 })(window);
