@@ -156,7 +156,7 @@
 			args = [];
 		}
 		
-		func = xJS.defined(func, true);
+		func = xJS.defined(func, true, true);
 		
 		if (xJS.isFunction(func)) {
 			if (_debug) {
