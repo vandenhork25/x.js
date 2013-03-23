@@ -1,16 +1,16 @@
 (function(window) {
     
-  var _version = 0.1,
+	var _version = 0.1,
 		
 		_copyright = "TD Development 2013",
+		
+		_instances = {},
+		
+		_debug = false,
 		
 		document = window.document,
 		
 		location = window.location,
-		
-		instances = {},
-		
-		_debug = false,
 		
 		xJS = function(label) {
 			return new xJS.prototype.init(label);
@@ -22,8 +22,8 @@
 				
 		init : (function(label) {
 			
-			if (xJS.defined(instances[label])) {
-				return instances[label];
+			if (xJS.defined(_instances[label])) {
+				return _instances[label];
 			}
 			
 			this.label = label;
@@ -31,7 +31,7 @@
 			this.fireAlwaysEvents = {};
 			
 			if (label) {
-				instances[label] = this;
+				_instances[label] = this;
 			}
 		
 			return this;
@@ -43,49 +43,54 @@
 	
 	/**
 	 * Core functions
+	 * 
 	 */
 	
 	xJS.defined = (function(subject, asObject, returnObj) {
-		
-		if (asObject !== false) {
-			asObject = true;
-		}
-		
-		if (asObject && typeof subject === "string" && subject.length > 0) {
-			var subjectArr = subject.split(".");
-						
-			if (subjectArr[0] === "window") {
-				subjectArr.shift();
-			}
-			
-			subject = window;
-			
-			for (var i in subjectArr) {
-				subject = subject[subjectArr[i]];
-				if (typeof subject === "undefined") {
-					return false;
-				}
-			}
-			
-			if (returnObj === true) {
-				returnObj = subject;
-			} else {
-				returnObj = true;
-			}
-			
-			subject = undefined;
-			subjectArr = undefined;
-			
-			return returnObj;
+	
+		if (typeof subject === "undefined") {
+			return false;
 		}
 		
 		else {
-			if (returnObj === true) {
-				returnObj = undefined;
-				return subject;
-			} else {
-				returnObj = undefined;
-				return (typeof subject !== "undefined");	
+			asObject = (asObject !== false) ? true : false;
+			
+			if (asObject && typeof subject === "string" && subject.length > 0) {
+				var subjectArr = subject.split(".");
+							
+				if (subjectArr[0] === "window") {
+					subjectArr.shift();
+				}
+				
+				subject = window;
+				
+				for (var i in subjectArr) {
+					subject = subject[subjectArr[i]];
+					if (typeof subject === "undefined") {
+						return false;
+					}
+				}
+				
+				if (returnObj === true) {
+					returnObj = subject;
+				} else {
+					returnObj = true;
+				}
+				
+				subject = undefined;
+				subjectArr = undefined;
+				
+				return returnObj;
+			}
+			
+			else {
+				if (returnObj === true) {
+					returnObj = undefined;
+					return subject;
+				} else {
+					returnObj = undefined;
+					return (typeof subject !== "undefined");	
+				}
 			}
 		}
 	});
@@ -397,8 +402,6 @@
 			} else {
 				xJS.trigger("form.submit", [event, this]);
 			}
-			
-			
 		}));
 	}
 	
