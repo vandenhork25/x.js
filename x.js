@@ -6,7 +6,7 @@
 		
 		_instances = {},
 		
-		_debug = false,
+		_debug = true,
 		
 		document = window.document,
 		
@@ -118,6 +118,10 @@
 		return (subject) ? (typeof subject === "object") : false;
 	});
 	
+	xJS.isBoolean = (function(subject) {
+		return (typeof subject === "boolean");
+	});
+	
 	xJS.isFunction = (function(subject) {
 		return (subject) ? (xJS.defined(subject.apply)) : false;
 	});
@@ -218,7 +222,8 @@
 	 */
 	
 	var fireAlwaysEvents = {},
-		fireOnceEvents = {};
+		fireOnceEvents = {},
+		frozen = false;
 	
 	xJS.fn.on = (function(event, func) {
 		
@@ -268,31 +273,33 @@
 	});
 	
 	xJS.fn.trigger = (function(event, args) {
-		xJS.trigger(event, args);
-
-		if (_debug) {
-			xJS.info("xJS.fn.trigger", {"event":event,"arguments":args});
-		}
-		
-		var events, i;
-		
-		if (xJS.defined(this.fireAlwaysEvents[event])) {
-			events = this.fireAlwaysEvents[event];
-			for (i in events) {
-				xJS.execArr(events[i], args);
+		if (!frozen) {
+			xJS.trigger(event, args);
+	
+			if (_debug) {
+				xJS.info("xJS.fn.trigger", {"event":event,"arguments":args});
 			}
-		}
-		
-		if (xJS.defined(this.fireOnceEvents[event])) {
-			events = this.fireOnceEvents[event];
-			for (i in events) {
-				xJS.execArr(events[i], args);
+			
+			var events, i;
+			
+			if (xJS.defined(this.fireAlwaysEvents[event])) {
+				events = this.fireAlwaysEvents[event];
+				for (i in events) {
+					xJS.execArr(events[i], args);
+				}
 			}
-			delete this.fireOnceEvents[event];
+			
+			if (xJS.defined(this.fireOnceEvents[event])) {
+				events = this.fireOnceEvents[event];
+				for (i in events) {
+					xJS.execArr(events[i], args);
+				}
+				delete this.fireOnceEvents[event];
+			}
+			
+			events = undefined;
+			i = undefined;
 		}
-		
-		events = undefined;
-		i = undefined;
 		
 		return this;
 	});
@@ -342,31 +349,37 @@
 	});
 	
 	xJS.trigger = (function(event, args) {
-				
-
-		if (_debug === true) {
-			xJS.info("xJS.trigger", {"event":event,"arguments":args});
+		if (!frozen) {	
+			if (_debug === true) {
+				xJS.info("xJS.trigger", {"event":event,"arguments":args});
+			}
+			
+			var events, i;
+					
+			if (xJS.defined(fireAlwaysEvents[event])) {
+				events = fireAlwaysEvents[event];
+				for (i in events) {
+					xJS.execArr(events[i], args);
+				} 
+			}
+			
+			if (xJS.defined(fireOnceEvents[event])) {
+				events = fireOnceEvents[event];
+				for (i in events) {
+					xJS.execArr(events[i], args);
+				} 
+				delete fireOnceEvents[event];
+			}
+			
+			i = undefined;
+			events = undefined;
 		}
-		
-		var events, i;
-				
-		if (xJS.defined(fireAlwaysEvents[event])) {
-			events = fireAlwaysEvents[event];
-			for (i in events) {
-				xJS.execArr(events[i], args);
-			} 
+	});
+	
+	xJS.freeze = (function(value) {
+		if (xJS.isBoolean(value)) {
+			frozen = value;
 		}
-		
-		if (xJS.defined(fireOnceEvents[event])) {
-			events = fireOnceEvents[event];
-			for (i in events) {
-				xJS.execArr(events[i], args);
-			} 
-			delete fireOnceEvents[event];
-		}
-		
-		i = undefined;
-		events = undefined;
 	});
 	
 	/**
