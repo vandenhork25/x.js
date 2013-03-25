@@ -1,7 +1,8 @@
 x.js
 ====
 
-JavaScript library for custom events and i18n.
+JavaScript library for custom events and i18n. I know some of the functions are also supported by jQuery. But this library is supposed to work without the need of jQuery.
+So if you don't like it, don't use it.
 
 
 ### Core Functions
