@@ -1,5 +1,5 @@
 (function(window) {
-    
+
 	var _version = 0.1,
 		
 		_copyright = "TD Development 2013",
@@ -11,10 +11,11 @@
 		document = window.document,
 		
 		location = window.location,
-		
+				
 		xJS = function(label) {
 			return new xJS.prototype.init(label);
 		};
+
 	
 	xJS.fn = xJS.prototype = {
 		
@@ -223,7 +224,8 @@
 	
 	var fireAlwaysEvents = {},
 		fireOnceEvents = {},
-		frozen = false;
+		_frozen = false,
+		_frozenTriggers = [];
 	
 	xJS.fn.on = (function(event, func) {
 		
@@ -273,7 +275,9 @@
 	});
 	
 	xJS.fn.trigger = (function(event, args) {
-		if (!frozen) {
+		
+		if (!_frozen || (_frozenTriggers.length > 0 &&_frozenTriggers.indexOf(event) < 0) ) {
+			
 			xJS.trigger(event, args);
 	
 			if (_debug) {
@@ -349,7 +353,9 @@
 	});
 	
 	xJS.trigger = (function(event, args) {
-		if (!frozen) {	
+				
+		if (!_frozen || (_frozenTriggers.length > 0 &&_frozenTriggers.indexOf(event) < 0) ) {
+			
 			if (_debug === true) {
 				xJS.info("xJS.trigger", {"event":event,"arguments":args});
 			}
@@ -378,8 +384,17 @@
 	
 	xJS.freeze = (function(value) {
 		if (xJS.isBoolean(value)) {
-			frozen = value;
+			_frozen = value;
+			_frozenTriggers = [];
+			return _frozen;
 		}
+		
+		if (xJS.isArray(value)) {
+			_frozen = true;
+			_frozenTriggers = value;
+			return true;
+		}
+		
 	});
 	
 	/**
@@ -474,7 +489,7 @@
 				x.info("xJS.i18n.get", {"string":string,"language":language});
 			}
 			
-			language = xJS.i18n.check(language);
+			language = xJS.i18n._check(language);
 			return xJS.i18n._translations[language][string];
 		}),
 		
@@ -484,11 +499,25 @@
 				x.info("xJS.i18n.set", {"string":string,"translation":translation,"language":language});
 			}
 			
-			language = xJS.i18n.check(language);
+			language = xJS.i18n._check(language);
 			xJS.i18n._translations[language][string] = translation;
 		}),
 		
-		check : (function(language) {
+		lang : (function(language) {
+
+			if (_debug) {
+				x.info("xJS.i18n.lang", {"language":language});
+			}
+			
+			if (xJS.empty(language, false)) {
+				return xJS.i18n._current;
+			}
+			
+			language = xJS.i18n._check(language);
+			xJS.i18n._current = language;
+		}),
+		
+		_check : (function(language) {
 			
 			if (_debug) {
 				x.info("xJS.i18n.check", {"language":language});
@@ -503,22 +532,7 @@
 			}
 			
 			return language;
-		}),
-		
-		lang : (function(language) {
-
-			if (_debug) {
-				x.info("xJS.i18n.lang", {"language":language});
-			}
-			
-			if (xJS.empty(language, false)) {
-				return xJS.i18n._current;
-			}
-			
-			language = xJS.i18n.check(language);
-			xJS.i18n._current = language;
 		})
-		
 	};
 
 	xJS.__ = (function(string, language) {
