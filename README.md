@@ -4,58 +4,106 @@ x.js
 JavaScript library for custom events and i18n.
 
 
-Core Functions
-====
-xJS.defined<br>
-xJS.empty<br>
-xJS.isArray<br>
-xJS.isObject<br>
-xJS.isBoolean<br>
-xJS.isFunction<br>
-xJS.isString<br>
-xJS.isNumber<br>
-xJS.redirect<br>
-xJS.reload<br>
-xJS.exec<br>
-xJS.execArr<br>
-xJS.now<br>
-xJS.version<br>
-xJS.enableDebugging<br>
-xJS.disableDebugging<br>
+### Core Functions
+<b>xJS.defined (subject, asObject, returnObj)</b><br>
 
-Core Object Functions
-====
-xJS.fn.destroy<br>
+ 
+<b>xJS.empty (subject, asObject)</b><br>
 
-Debugging Functions
-====
-xJS.log<br>
-xJS.info<br>
-xJS.error<br>
-xJS.warn<br>
-xJS.debug<br>
-xJS.dir<br>
+<b>xJS.isArray(subject)</b><br>
+Checks if given subject is an array.
 
-Event Functions
-====
-xJS.on<br>
-xJS.once<br>
-xJS.off<br>
-xJS.trigger<br>
-xJS.freeze<br>
+<b>xJS.isObject(subject)</b><br>
+Checks if given subject is an object.
 
-Event Object Functions
-====
-xJS.fn.on<br>
-xJS.fn.once<br>
-xJS.fn.off<br>
-xJS.fn.trigger<br>
+<b>xJS.isBoolean(subject)</b><br>
+Checks if given subject is a boolean.
 
-i18n Functions
-====
-xJS.__					Calls xJS.i18n.get<br>
-xJS.i18n.get			Return a translated string<br>
-xJS.i18n.set			Sets a translation for a string<br>
-xJS.i18n.lang			Gets / Sets the current language<br>
+<b>xJS.isFunction(subject)</b><br>
+Checks if given subject is a function.
 
-TD Development 2013
+<b>xJS.isString(subject)</b><br>
+Checks if given subject is a string.
+
+<b>xJS.isNumber(subject)</b><br>
+Checks if given subject is a number.
+
+<b>xJS.redirect</b><br>
+
+<b>xJS.reload</b><br>
+
+<b>xJS.exec</b><br>
+
+<b>xJS.execArr</b><br>
+
+<b>xJS.now(milliseconds)</b><br>
+Returns unix timestamp with or without milliseconds.
+
+<b>xJS.version()</b><br>
+Returns version of xJS
+
+<b>xJS.enableDebugging()</b><br>
+Enables debug output in console
+
+<b>xJS.disableDebugging()</b><br>
+Disables debug output in console
+
+
+### Core Object Functions
+<b>xJS.fn.destroy</b><br>
+
+### Debugging Functions
+<b>xJS.log()</b><br>
+Calls <i>console.log</i> if available
+
+<b>xJS.info()</b><br>
+Calls <i>console.info</i> if available
+
+<b>xJS.error()</b><br>
+Calls <i>console.error</i> if available
+
+<b>xJS.warn()</b><br>
+Calls <i>console.warn</i> if available
+
+<b>xJS.debug()</b><br>
+Calls <i>console.debug</i> if available
+
+<b>xJS.dir()</b><br>
+Calls <i>console.dir</i> if available
+
+
+### Event Functions
+<b>xJS.on(event, func)</b><br>
+Add a global event
+
+<b>xJS.once(event, func)</b><br>
+Add a global event that is executed only once
+
+<b>xJS.off(event)</b><br>
+Remove a global event
+
+<b>xJS.trigger(event, args)</b><br>
+Triggers an event
+
+<b>xJS.freeze(value)</b><br>
+
+### Event Object Functions
+<b>xJS.fn.on</b><br>
+<b>xJS.fn.once</b><br>
+<b>xJS.fn.off</b><br>
+<b>xJS.fn.trigger</b><br>
+
+### i18n Functions
+<b>xJS.__</b><br>
+Calls xJS.i18n.get
+	
+<b>xJS.i18n.get</b><br>
+Return a translated string
+
+<b>xJS.i18n.set</b><br>
+Sets a translation for a string
+	
+<b>xJS.i18n.lang</b><br>
+Gets / Sets the current language
+
+<i>TD Development 2013</i>
