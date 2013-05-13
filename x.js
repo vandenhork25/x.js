@@ -1,6 +1,6 @@
 (function(window) {
 
-	var _version = 0.1,
+	var _version = 0.2,
 		
 		_copyright = "TD Development 2013",
 		
