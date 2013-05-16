@@ -195,6 +195,10 @@
 		return _version;
 	});
 	
+	xJS.debugmode = (function() {
+		return _debug;
+	});
+	
 	xJS.enableDebugging = (function() {
 		_debug = true;
 		xJS.info("debugging enabled");
