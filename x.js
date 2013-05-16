@@ -6,7 +6,7 @@
 		
 		_instances = {},
 		
-		_debug = true,
+		_debug = false,
 		
 		document = window.document,
 		
