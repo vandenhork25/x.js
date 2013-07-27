@@ -1,12 +1,13 @@
-(function(window) {
+/*!
+ * xJS
+ * Version 0.3
+ * Copyright (c) 2013 TD Development
+ */
+;(function(window) {
 	
 	"use strict";
 
-	var _version = 0.3,
-		
-		_copyright = "TD Development 2013",
-		
-		_instances = {},
+	var	_instances = {},
 		
 		_debug = false,
 		
@@ -195,14 +196,6 @@
 		return parseInt(ret,10);
 	});
 		
-	xJS.version = (function() {
-		return _version;
-	});
-	
-	xJS.copyright = (function() {
-		return _copyright;
-	});
-	
 	xJS.debugmode = (function() {
 		return _debug;
 	});
