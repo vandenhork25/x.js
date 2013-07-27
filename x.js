@@ -1,6 +1,8 @@
 (function(window) {
+	
+	"use strict";
 
-	var _version = 0.2,
+	var _version = 0.3,
 		
 		_copyright = "TD Development 2013",
 		
@@ -66,9 +68,11 @@
 				subject = window;
 				
 				for (var i in subjectArr) {
-					subject = subject[subjectArr[i]];
-					if (typeof subject === "undefined") {
-						return false;
+					if (subjectArr.hasOwnProperty(i)) {
+						subject = subject[subjectArr[i]];
+						if (typeof subject === "undefined") {
+							return false;
+						}
 					}
 				}
 				
@@ -195,6 +199,10 @@
 		return _version;
 	});
 	
+	xJS.copyright = (function() {
+		return _copyright;
+	});
+	
 	xJS.debugmode = (function() {
 		return _debug;
 	});
@@ -210,8 +218,8 @@
 	});
 		
 	xJS.fn.destroy = (function() {
-		if (xJS.defined(instances[this.label])) {
-			delete instances[this.label];
+		if (xJS.defined(_instances[this.label])) {
+			delete _instances[this.label];
 		}
 		
 		delete this.label;
@@ -293,14 +301,18 @@
 			if (xJS.defined(this.fireAlwaysEvents[event])) {
 				events = this.fireAlwaysEvents[event];
 				for (i in events) {
-					xJS.execArr(events[i], args);
+					if (events.hasOwnProperty(i)) {
+						xJS.execArr(events[i], args);
+					}
 				}
 			}
 			
 			if (xJS.defined(this.fireOnceEvents[event])) {
 				events = this.fireOnceEvents[event];
 				for (i in events) {
-					xJS.execArr(events[i], args);
+					if (events.hasOwnProperty(i)) {
+						xJS.execArr(events[i], args);
+					}
 				}
 				delete this.fireOnceEvents[event];
 			}
@@ -369,14 +381,18 @@
 			if (xJS.defined(fireAlwaysEvents[event])) {
 				events = fireAlwaysEvents[event];
 				for (i in events) {
-					xJS.execArr(events[i], args);
+					if (events.hasOwnProperty(i)) {
+						xJS.execArr(events[i], args);
+					}
 				} 
 			}
 			
 			if (xJS.defined(fireOnceEvents[event])) {
 				events = fireOnceEvents[event];
 				for (i in events) {
-					xJS.execArr(events[i], args);
+					if (events.hasOwnProperty(i)) {
+						xJS.execArr(events[i], args);
+					}
 				} 
 				delete fireOnceEvents[event];
 			}
@@ -406,29 +422,29 @@
 	 * 
 	 */
 	
-	if (xJS.defined(jQuery)) {
+	if (xJS.defined(window.jQuery)) {
 		
-		jQuery(document).on("ready", (function() {
+		window.jQuery(document).on("ready", (function() {
 			xJS.trigger("document.ready");
 		}));
 		
-		jQuery(window).on("load", (function() {
+		window.jQuery(window).on("load", (function() {
 			xJS.trigger("window.load");
 		}));
 		
-		jQuery(window).on("unload", (function() {
+		window.jQuery(window).on("unload", (function() {
 			xJS.trigger("window.unload");
 		}));
 		
-		jQuery(window).on("resize", (function() {
+		window.jQuery(window).on("resize", (function() {
 			xJS.trigger("window.resize");
 		}));
 		
-		jQuery(window).on("scroll", (function() {
+		window.jQuery(window).on("scroll", (function() {
 			xJS.trigger("window.scroll");
 		}));
 		
-		jQuery(document).on("submit", "form", (function(event) {
+		window.jQuery(document).on("submit", "form", (function(event) {
 			if (!xJS.empty(this.id)) {
 				xJS("#" + this.id).trigger("form.submit", [event, this]);
 			} else {
@@ -444,37 +460,37 @@
 	
 	xJS.log = (function() {
 		if (xJS.defined("console.log.apply")) {
-			console.log.apply(console, arguments);
+			window.console.log.apply(window.console, arguments);
 		}
 	});
 	
 	xJS.info = (function() {
 		if (xJS.defined("console.info.apply")) {
-			console.info.apply(console, arguments);
+			window.console.info.apply(window.console, arguments);
 		}
 	});
 	
 	xJS.error = (function() {
 		if (xJS.defined("console.error.apply")) {
-			console.error.apply(console, arguments);
+			window.console.error.apply(window.console, arguments);
 		}
 	});
 	
 	xJS.warn = (function() {
 		if (xJS.defined("console.warn.apply")) {
-			console.warn.apply(console, arguments);
+			window.console.warn.apply(window.console, arguments);
 		}
 	});
 
 	xJS.debug = (function() {
 		if (xJS.defined("console.debug.apply")) {
-			console.debug.apply(console, arguments);
+			window.console.debug.apply(window.console, arguments);
 		}
 	});
 	
 	xJS.dir = (function() {
 		if (xJS.defined("console.dir.apply")) {
-			console.dir.apply(console, arguments);
+			window.console.dir.apply(window.console, arguments);
 		}
 	});
 	
@@ -490,7 +506,7 @@
 		get : (function(string, language) {
 			
 			if (_debug) {
-				x.info("xJS.i18n.get", {"string":string,"language":language});
+				xJS.info("xJS.i18n.get", {"string":string,"language":language});
 			}
 			
 			language = xJS.i18n._check(language);
@@ -500,7 +516,7 @@
 		set : (function(string, translation, language) {
 			
 			if (_debug) {
-				x.info("xJS.i18n.set", {"string":string,"translation":translation,"language":language});
+				xJS.info("xJS.i18n.set", {"string":string,"translation":translation,"language":language});
 			}
 			
 			language = xJS.i18n._check(language);
@@ -510,7 +526,7 @@
 		lang : (function(language) {
 
 			if (_debug) {
-				x.info("xJS.i18n.lang", {"language":language});
+				xJS.info("xJS.i18n.lang", {"language":language});
 			}
 			
 			if (xJS.empty(language, false)) {
@@ -524,7 +540,7 @@
 		_check : (function(language) {
 			
 			if (_debug) {
-				x.info("xJS.i18n.check", {"language":language});
+				xJS.JS.info("xJS.i18n.check", {"language":language});
 			}
 			
 			if (xJS.empty(language, false)) {
@@ -542,7 +558,7 @@
 	xJS.__ = (function(string, language) {
 		
 		if (_debug) {
-			x.info("xJS.__", {"string":string,"language":language});
+			xJS.info("xJS.__", {"string":string,"language":language});
 		}
 		
 		return xJS.i18n.get(string, language);
